@@ -1,4 +1,18 @@
-<!DOCTYPE html>
+<?php
+require 'config.php';
+
+try {
+    // Esta consulta trae los juegos y el nombre de su plataforma
+    $stmt = $pdo->query("SELECT juegos.*, plataformas.nombre as plataforma 
+                         FROM juegos 
+                         JOIN plataformas ON juegos.id_plataforma = plataformas.id");
+    $juegos = $stmt->fetchAll();
+}
+catch (Exception $e) {
+    $error_conexion = "Error al conectar con la base de datos: " . $e->getMessage();
+    $juegos = [];
+}
+?><!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -27,7 +41,8 @@
         
         <?php if (isset($error_conexion)): ?>
             <div class="alert alert-error"><?php echo htmlspecialchars($error_conexion); ?></div>
-        <?php endif; ?>
+        <?php
+endif; ?>
 
         <div class="table-container">
             <table class="games-table">
@@ -44,7 +59,8 @@
                         <tr>
                             <td colspan="4" style="text-align: center; padding: 3rem;">No hay juegos registrados en la base de datos.</td>
                         </tr>
-                    <?php else: ?>
+                    <?php
+else: ?>
                         <?php foreach ($juegos as $juego): ?>
                             <tr>
                                 <td>
@@ -57,11 +73,13 @@
                                     </span>
                                 </td>
                                 <td>
-                                    <?php 
-                                        $scoreClass = 'low';
-                                        if ($juego['puntuacion'] >= 8.5) $scoreClass = 'high';
-                                        elseif ($juego['puntuacion'] >= 6.0) $scoreClass = 'mid';
-                                    ?>
+                                    <?php
+        $scoreClass = 'low';
+        if ($juego['puntuacion'] >= 8.5)
+            $scoreClass = 'high';
+        elseif ($juego['puntuacion'] >= 6.0)
+            $scoreClass = 'mid';
+?>
                                     <span class="score <?php echo $scoreClass; ?>">
                                         <?php echo number_format($juego['puntuacion'], 1); ?>
                                     </span>
@@ -70,8 +88,10 @@
                                     <a href="#" class="btn-link">Editar</a>
                                 </td>
                             </tr>
-                        <?php endforeach; ?>
-                    <?php endif; ?>
+                        <?php
+    endforeach; ?>
+                    <?php
+endif; ?>
                 </tbody>
             </table>
         </div>
